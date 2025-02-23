@@ -17,11 +17,21 @@ public class Cache<K, V> implements LRUMapListener<K, V>, Store<K, V> {
   private final LRUStore<K, V> memoryStore;
   private final Store<K, V> backingStore;
 
+  /**
+   * Creates an unbounded in memory store with a no op backing store.
+   * This is basically the same as just using a Map<K,V>
+   */
   public Cache() {
     this.memoryStore = new LRUStore<>();
     this.backingStore = new NoopStore<>();
   }
 
+  /**
+   * Creates a limited in memory store with a disk backing store.
+   *
+   * @param maxMemoryObjects the number of objects that can reside in memory.
+   * @param name             the name of the disk backing store.
+   */
   public Cache(int maxMemoryObjects, String name) {
     memoryStore = new LRUStore<>(maxMemoryObjects);
     memoryStore.addEventListener(this);
@@ -77,7 +87,7 @@ public class Cache<K, V> implements LRUMapListener<K, V>, Store<K, V> {
   public void close() {
     backingStore.close();
   }
-
+  
   @Override
   public void objectEvicted(Map.Entry<K, V> entry) {
     try {

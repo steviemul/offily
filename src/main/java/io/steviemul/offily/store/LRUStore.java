@@ -7,6 +7,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Basic key / value store that evicts objects once the number of items
+ * has reached capacity. This is determined by looking at the least recently used objects.
+ * <p>
+ * When an object is evicted, an event is sent to any registered listeners.
+ *
+ * @param <K> the Key to store
+ * @param <V> the Value to store
+ */
 public class LRUStore<K, V> extends LinkedHashMap<K, V> implements Store<K, V> {
 
   private static final float LOAD_FACTOR = 0.75f;
