@@ -1,10 +1,8 @@
-package io.steviemul.slalom.store.kv;
+package io.steviemul.offily.store.kv;
 
-import static io.steviemul.slalom.store.Utils.base64StringToObject;
-import static io.steviemul.slalom.store.Utils.getStoreFilename;
-import static io.steviemul.slalom.store.Utils.objectToBase64String;
+import io.steviemul.offily.store.StoreException;
+import io.steviemul.offily.store.Utils;
 
-import io.steviemul.slalom.store.StoreException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,6 +17,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -45,7 +44,7 @@ public class Index<K, V> {
 
   public Index(File root, Function<String, V> valueConverter, Integer identifier)
       throws StoreException {
-    this.indexFile = new File(root, getStoreFilename(FILENAME, EXT, identifier));
+    this.indexFile = new File(root, Utils.getStoreFilename(FILENAME, EXT, identifier));
     this.valueConverter = valueConverter;
 
     loadIndex();
@@ -95,7 +94,8 @@ public class Index<K, V> {
   @SuppressWarnings("unchecked")
   private void loadIndex() {
 
-    if (!indexFile.exists()) return;
+    if (!indexFile.exists())
+      return;
 
     int count = 0;
 
@@ -105,7 +105,7 @@ public class Index<K, V> {
       while ((line = reader.readLine()) != null) {
         String[] parts = line.split(INDEX_DELIM);
         if (parts.length == 2) {
-          index.put((K) base64StringToObject(parts[0]), valueConverter.apply(parts[1]));
+          index.put((K) Utils.base64StringToObject(parts[0]), valueConverter.apply(parts[1]));
           count++;
         }
       }
@@ -118,13 +118,14 @@ public class Index<K, V> {
 
   private void saveIndex() {
 
-    if (!dirty.get() || !indexFile.getParentFile().exists()) return;
+    if (!dirty.get() || !indexFile.getParentFile().exists())
+      return;
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(indexFile))) {
       int count = 0;
       for (Map.Entry<K, V> entry : index.entrySet()) {
         writer.write(
-            objectToBase64String(entry.getKey()) + INDEX_DELIM + entry.getValue() + NEWLINE);
+            Utils.objectToBase64String(entry.getKey()) + INDEX_DELIM + entry.getValue() + NEWLINE);
         count++;
       }
 

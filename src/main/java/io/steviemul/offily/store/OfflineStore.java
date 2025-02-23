@@ -1,6 +1,4 @@
-package io.steviemul.slalom.store;
-
-import static io.steviemul.slalom.store.Utils.deleteDirectory;
+package io.steviemul.offily.store;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.UUID;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -88,11 +87,12 @@ public class OfflineStore<K, V> implements Store<K, V> {
 
   @Override
   public void clear() {
-    deleteDirectory(root);
+    Utils.deleteDirectory(root);
   }
 
   @Override
-  public void close() {}
+  public void close() {
+  }
 
   private void saveIndex() {
     writeObject(index, new File(root, INDEX));
@@ -100,7 +100,8 @@ public class OfflineStore<K, V> implements Store<K, V> {
 
   private void writeObject(Object obj, File location) {
 
-    if (location.exists()) return;
+    if (location.exists())
+      return;
 
     try (OutputStream fOut = new FileOutputStream(location)) {
       try (ObjectOutputStream oOut = new ObjectOutputStream(fOut)) {

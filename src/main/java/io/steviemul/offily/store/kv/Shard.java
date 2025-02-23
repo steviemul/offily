@@ -1,11 +1,8 @@
-package io.steviemul.slalom.store.kv;
+package io.steviemul.offily.store.kv;
 
-import static io.steviemul.slalom.store.Utils.base64StringToObject;
-import static io.steviemul.slalom.store.Utils.bytesToObject;
-import static io.steviemul.slalom.store.Utils.objectToBytes;
-
-import io.steviemul.slalom.store.Store;
-import io.steviemul.slalom.store.StoreException;
+import io.steviemul.offily.store.Store;
+import io.steviemul.offily.store.StoreException;
+import io.steviemul.offily.store.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +62,7 @@ public class Shard<K, V> implements Store<K, V> {
 
       DataFileRecord record = dataFile.get(position);
 
-      return (V) bytesToObject(record.value());
+      return (V) Utils.bytesToObject(record.value());
     } finally {
       lock.readLock().unlock();
     }
@@ -84,8 +81,8 @@ public class Shard<K, V> implements Store<K, V> {
     lock.writeLock().lock();
 
     try {
-      byte[] keyBytes = objectToBytes(key);
-      byte[] valueBytes = objectToBytes(value);
+      byte[] keyBytes = Utils.objectToBytes(key);
+      byte[] valueBytes = Utils.objectToBytes(value);
 
       DataFileRecord record = new DataFileRecord(keyBytes, valueBytes);
 
@@ -103,7 +100,7 @@ public class Shard<K, V> implements Store<K, V> {
       index.put(key, position);
 
       printUsageStats();
-      
+
       return value;
     } catch (IOException e) {
       throw new StoreException("Unable to put object", e);
@@ -113,11 +110,13 @@ public class Shard<K, V> implements Store<K, V> {
   }
 
   private void printUsageStats() {
-    log.info("Shard statistics [shardId={}, numberOfItems={}, maxSize={}, usedSize={}]",
+    double usage = ((double) dataFile.getUsedSize() / (double) dataFile.getMaxSize()) * 100f;
+
+    log.info("Shard statistics [shardId={}, numberOfItems={}, maxSize={}, used={}%]",
         this.getId(),
         index.entrySet().size(),
         dataFile.getMaxSize(),
-        dataFile.getUsedSize());
+        String.format("%.2f", usage));
   }
 
   @Override
@@ -154,8 +153,8 @@ public class Shard<K, V> implements Store<K, V> {
         entry -> {
           String[] record = entry.getRecord();
 
-          K key = (K) base64StringToObject(record[0]);
-          V value = (V) (record.length == 2 ? base64StringToObject(record[1]) : null);
+          K key = (K) Utils.base64StringToObject(record[0]);
+          V value = (V) (record.length == 2 ? Utils.base64StringToObject(record[1]) : null);
 
           if (entry.isPut()) {
             puts.getAndIncrement();

@@ -1,19 +1,16 @@
-package io.steviemul.slalom.store.kv;
+package io.steviemul.offily.store.kv;
 
-import static io.steviemul.slalom.store.Utils.deleteDirectory;
-import static io.steviemul.slalom.store.Utils.getDataFileRecord;
-import static io.steviemul.slalom.store.Utils.getStoreFilename;
-import static io.steviemul.slalom.store.kv.DataFile.DATA_EXT;
-import static io.steviemul.slalom.store.kv.DataFile.DATA_FILE;
+import io.steviemul.offily.store.Store;
+import io.steviemul.offily.store.StoreException;
+import io.steviemul.offily.store.Utils;
 
-import io.steviemul.slalom.store.Store;
-import io.steviemul.slalom.store.StoreException;
 import java.io.File;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -36,7 +33,7 @@ public class KeyValueStore<K, V> implements Store<K, V> {
   private void loadShards() {
     int shardId = 0;
 
-    File shardDataFile = new File(root, getStoreFilename(DATA_FILE, DATA_EXT, shardId));
+    File shardDataFile = new File(root, Utils.getStoreFilename(DataFile.DATA_FILE, DataFile.DATA_EXT, shardId));
 
     while (shardDataFile.exists()) {
       Shard<K, V> shard = new Shard<>(root, shardId);
@@ -45,7 +42,7 @@ public class KeyValueStore<K, V> implements Store<K, V> {
       log.info("Loaded shard [shardId={}]", shardId);
 
       shardId++;
-      shardDataFile = new File(root, getStoreFilename(DATA_FILE, DATA_EXT, shardId));
+      shardDataFile = new File(root, Utils.getStoreFilename(DataFile.DATA_FILE, DataFile.DATA_EXT, shardId));
     }
 
     if (shards.isEmpty()) {
@@ -81,7 +78,7 @@ public class KeyValueStore<K, V> implements Store<K, V> {
   public V put(K key, V value) throws StoreException {
     lock.writeLock().lock();
     try {
-      DataFileRecord record = getDataFileRecord(key, value);
+      DataFileRecord record = Utils.getDataFileRecord(key, value);
 
       Shard<K, V> shard = getWritableShardFor(record);
 
@@ -106,7 +103,7 @@ public class KeyValueStore<K, V> implements Store<K, V> {
 
   @Override
   public void clear() {
-    deleteDirectory(root);
+    Utils.deleteDirectory(root);
 
     for (Shard<K, V> shard : shards.values()) {
       shard.clear();

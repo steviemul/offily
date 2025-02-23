@@ -1,12 +1,11 @@
-package io.steviemul.slalom.store.kv;
+package io.steviemul.offily.store.kv;
 
-import static io.steviemul.slalom.store.Utils.encodeBytes;
-import static io.steviemul.slalom.store.Utils.getStoreFilename;
-import static io.steviemul.slalom.store.Utils.objectToBase64String;
-import static io.steviemul.slalom.store.kv.LogEntry.OPERATION_PUT;
-import static io.steviemul.slalom.store.kv.LogEntry.OPERATION_REMOVE;
+import static io.steviemul.offily.store.kv.LogEntry.OPERATION_PUT;
+import static io.steviemul.offily.store.kv.LogEntry.OPERATION_REMOVE;
 
-import io.steviemul.slalom.store.StoreException;
+import io.steviemul.offily.store.Utils;
+import io.steviemul.offily.store.StoreException;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.function.Consumer;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,31 +34,32 @@ public class WriteAheadLog<K, V> {
   }
 
   public WriteAheadLog(File root, Integer identifier) throws IOException {
-    String logFilename = getStoreFilename(LOG_FILE, EXT, identifier);
+    String logFilename = Utils.getStoreFilename(LOG_FILE, EXT, identifier);
 
     this.logFile = new File(root, logFilename);
     this.logWriter = new BufferedWriter(new FileWriter(this.logFile, true));
   }
 
   public void put(K key, V value) throws IOException {
-    addToLog(OPERATION_PUT, objectToBase64String(key), objectToBase64String(value));
+    addToLog(OPERATION_PUT, Utils.objectToBase64String(key), Utils.objectToBase64String(value));
   }
 
   public void put(byte[] key, byte[] value) throws IOException {
-    addToLog(OPERATION_PUT, encodeBytes(key), encodeBytes(value));
+    addToLog(OPERATION_PUT, Utils.encodeBytes(key), Utils.encodeBytes(value));
   }
 
   public void remove(K key, V value) throws IOException {
-    addToLog(OPERATION_REMOVE, objectToBase64String(key), objectToBase64String(value));
+    addToLog(OPERATION_REMOVE, Utils.objectToBase64String(key), Utils.objectToBase64String(value));
   }
 
   public void remove(byte[] key, byte[] value) throws IOException {
-    addToLog(OPERATION_REMOVE, encodeBytes(key), encodeBytes(value));
+    addToLog(OPERATION_REMOVE, Utils.encodeBytes(key), Utils.encodeBytes(value));
   }
 
   public void processRecords(Consumer<LogEntry> processor) {
 
-    if (!logFile.exists()) return;
+    if (!logFile.exists())
+      return;
 
     try (Reader reader = new FileReader(logFile)) {
       try (BufferedReader buffer = new BufferedReader(reader)) {

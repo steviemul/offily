@@ -1,6 +1,7 @@
-package io.steviemul.slalom.store;
+package io.steviemul.offily.store;
 
-import io.steviemul.slalom.store.kv.DataFileRecord;
+import io.steviemul.offily.store.kv.DataFileRecord;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -10,7 +11,8 @@ import java.util.Base64;
 
 public class Utils {
 
-  private Utils() {}
+  private Utils() {
+  }
 
   public static String encodeBytes(byte[] bytes) {
     return Base64.getEncoder().encodeToString(bytes);

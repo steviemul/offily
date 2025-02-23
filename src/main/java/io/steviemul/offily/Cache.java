@@ -1,12 +1,14 @@
-package io.steviemul.slalom;
+package io.steviemul.offily;
 
-import io.steviemul.slalom.event.LRUMapListener;
-import io.steviemul.slalom.store.LRUStore;
-import io.steviemul.slalom.store.NoopStore;
-import io.steviemul.slalom.store.Store;
-import io.steviemul.slalom.store.StoreException;
-import io.steviemul.slalom.store.kv.KeyValueStore;
+import io.steviemul.offily.event.LRUMapListener;
+import io.steviemul.offily.store.LRUStore;
+import io.steviemul.offily.store.NoopStore;
+import io.steviemul.offily.store.Store;
+import io.steviemul.offily.store.StoreException;
+import io.steviemul.offily.store.kv.KeyValueStore;
+
 import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

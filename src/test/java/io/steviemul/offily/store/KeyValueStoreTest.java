@@ -1,9 +1,11 @@
-package io.steviemul.slalom.store;
+package io.steviemul.offily.store;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import io.steviemul.slalom.store.kv.KeyValueStore;
+import io.steviemul.offily.store.kv.KeyValueStore;
+
 import java.io.Serializable;
+
 import org.junit.jupiter.api.Test;
 
 class KeyValueStoreTest {
@@ -28,5 +30,6 @@ class KeyValueStoreTest {
     store.close();
   }
 
-  record Person(String firstName, String surname, int age) implements Serializable {}
+  record Person(String firstName, String surname, int age) implements Serializable {
+  }
 }

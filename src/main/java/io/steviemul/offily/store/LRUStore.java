@@ -1,6 +1,7 @@
-package io.steviemul.slalom.store;
+package io.steviemul.offily.store;
 
-import io.steviemul.slalom.event.LRUMapListener;
+import io.steviemul.offily.event.LRUMapListener;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,5 +45,6 @@ public class LRUStore<K, V> extends LinkedHashMap<K, V> implements Store<K, V> {
   }
 
   @Override
-  public void close() {}
+  public void close() {
+  }
 }

@@ -1,4 +1,4 @@
-package io.steviemul.slalom.event;
+package io.steviemul.offily.event;
 
 import java.util.Map;
 

@@ -1,6 +1,6 @@
-package io.steviemul.slalom.store.kv;
+package io.steviemul.offily.store.kv;
 
-import static io.steviemul.slalom.store.Utils.getStoreFilename;
+import static io.steviemul.offily.store.Utils.getStoreFilename;
 
 import java.io.File;
 import java.io.IOException;
@@ -155,7 +155,7 @@ public class DataFile<K> {
   public int getUsedSize() {
     return dataBuffer.position();
   }
-  
+
   private byte[] getCurrentBufferValue() {
     int size = dataBuffer.getInt();
     byte[] bytes = new byte[size];

@@ -1,4 +1,4 @@
-package io.steviemul.slalom.store;
+package io.steviemul.offily.store;
 
 public class NoopStore<K, V> implements Store<K, V> {
 
@@ -23,8 +23,10 @@ public class NoopStore<K, V> implements Store<K, V> {
   }
 
   @Override
-  public void clear() {}
+  public void clear() {
+  }
 
   @Override
-  public void close() {}
+  public void close() {
+  }
 }

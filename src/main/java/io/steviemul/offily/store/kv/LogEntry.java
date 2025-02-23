@@ -1,4 +1,4 @@
-package io.steviemul.slalom.store.kv;
+package io.steviemul.offily.store.kv;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,8 @@ public class LogEntry {
 
   private final String operation;
 
-  @Getter private final String[] record;
+  @Getter
+  private final String[] record;
 
   public boolean isPut() {
     return OPERATION_PUT.equalsIgnoreCase(operation);

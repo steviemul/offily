@@ -1,4 +1,4 @@
-package io.steviemul.slalom.store;
+package io.steviemul.offily.store;
 
 public class StoreException extends RuntimeException {
 

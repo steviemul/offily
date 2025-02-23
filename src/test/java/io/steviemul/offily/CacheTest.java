@@ -1,9 +1,10 @@
-package io.steviemul.slalom;
+package io.steviemul.offily;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import org.junit.jupiter.api.Test;
 
 class CacheTest {
@@ -50,5 +51,6 @@ class CacheTest {
     cache.close();
   }
 
-  record Person(String firstName, String surname, int age) implements Serializable {}
+  record Person(String firstName, String surname, int age) implements Serializable {
+  }
 }
